@@ -37,10 +37,14 @@
         including warm-up, rest between sets, and short conditioning.
       </p>
       <p>
-        Training is based on <strong>full-body strength work</strong> plus
-        <strong>simple conditioning</strong> (like incline treadmill walking
-        or intervals).
+        Training is organized into a <strong>4-week mesocycle</strong>:
       </p>
+      <ul class="about-list">
+        <li><strong>Week 1 – Foundation:</strong> learn movements, moderate load.</li>
+        <li><strong>Week 2 – Build:</strong> small load increase, solid technique.</li>
+        <li><strong>Week 3 – Peak:</strong> hardest week (heavier loads, same RPE).</li>
+        <li><strong>Week 4 – Deload:</strong> reduced load to recover and adapt.</li>
+      </ul>
 
       <h3>Abbreviations</h3>
       <ul class="about-list">
@@ -71,6 +75,27 @@
         <select id="day-select"></select>
       </div>
 
+      <div class="field">
+        <label for="meso-week">Mesocycle Week</label>
+        <select id="meso-week">
+          <option value="1">Week 1 – Foundation</option>
+          <option value="2" selected>Week 2 – Build</option>
+          <option value="3">Week 3 – Peak</option>
+          <option value="4">Week 4 – Deload</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="day-mode">Day Type</label>
+        <select id="day-mode">
+          <option value="normal" selected>Normal day</option>
+          <option value="easy">Easy / low-stress day</option>
+        </select>
+        <p class="hint small-hint">
+          Easy day = drop load by roughly 15–25% and keep RPE 1–2 points lower.
+        </p>
+      </div>
+
       <button id="load-plan-btn" class="btn primary">Load Plan</button>
     </section>
 
@@ -89,6 +114,8 @@
         <h2 id="logger-exercise-name"></h2>
         <p id="logger-target"></p>
       </div>
+
+      <p id="logger-suggestion" class="hint"></p>
 
       <div class="logger-form">
         <div class="field">
@@ -160,6 +187,6 @@
     <p class="footer-note">Data stored locally · PWA-ready</p>
   </footer>
 
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>
