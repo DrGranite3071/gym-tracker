@@ -10,37 +10,43 @@ const WORKOUT_PLAN = [
         id: "goblet_squat",
         name: "Goblet Squat",
         target: "3 × 10–12 · RPE ~7",
-        video: "https://www.youtube.com/results?search_query=goblet+squat+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=goblet+squat+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "lat_pulldown",
         name: "Lat Pulldown",
         target: "3 × 10–12 · RPE ~7",
-        video: "https://www.youtube.com/results?search_query=lat+pulldown+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=lat+pulldown+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "db_chest_press",
         name: "Dumbbell Chest Press",
         target: "3 × 8–10 · RPE ~7",
-        video: "https://www.youtube.com/results?search_query=dumbbell+chest+press+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=dumbbell+chest+press+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "rdl",
         name: "Romanian Deadlift",
         target: "3 × 10–12 · RPE ~7",
-        video: "https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "face_pull",
         name: "Cable Face Pulls",
         target: "2 × 12–15 · RPE ~6",
-        video: "https://www.youtube.com/results?search_query=cable+face+pull+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=cable+face+pull+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "incline_walk",
         name: "Incline Treadmill Walk",
         target: "10–15 min · moderate",
-        video: "https://www.youtube.com/results?search_query=incline+treadmill+walk+for+fat+loss"
+        video: "https://www.youtube.com/results?search_query=incline+treadmill+walk+for+fat+loss",
+        kind: "treadmill"
       }
     ]
   },
@@ -53,37 +59,43 @@ const WORKOUT_PLAN = [
         id: "seated_row",
         name: "Seated Row (Machine/Cable)",
         target: "3 × 10–12 · RPE ~7",
-        video: "https://www.youtube.com/results?search_query=seated+row+machine+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=seated+row+machine+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "oh_press",
         name: "Overhead Dumbbell Press",
         target: "3 × 8–10 · RPE ~7",
-        video: "https://www.youtube.com/results?search_query=overhead+dumbbell+press+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=overhead+dumbbell+press+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "db_curl",
         name: "Dumbbell Bicep Curl",
         target: "2 × 10–12 · RPE ~6",
-        video: "https://www.youtube.com/results?search_query=dumbbell+bicep+curl+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=dumbbell+bicep+curl+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "tri_pushdown",
         name: "Cable Triceps Pushdown",
         target: "2 × 10–12 · RPE ~6",
-        video: "https://www.youtube.com/results?search_query=cable+tricep+pushdown+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=cable+tricep+pushdown+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "knee_raises",
         name: "Hanging Knee Raises",
         target: "3 × 10–15 · RPE ~6",
-        video: "https://www.youtube.com/results?search_query=hanging+knee+raise+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=hanging+knee+raise+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "woodchop",
         name: "Cable Woodchoppers",
         target: "2 × 12 / side · RPE ~6",
-        video: "https://www.youtube.com/results?search_query=cable+woodchopper+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=cable+woodchopper+exercise+tutorial",
+        kind: "strength"
       }
     ]
   },
@@ -96,31 +108,36 @@ const WORKOUT_PLAN = [
         id: "leg_press",
         name: "Leg Press",
         target: "3 × 10–12 · RPE ~7",
-        video: "https://www.youtube.com/results?search_query=leg+press+machine+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=leg+press+machine+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "walking_lunge",
         name: "Walking Lunges",
         target: "2 × 12 steps / leg · RPE ~7",
-        video: "https://www.youtube.com/results?search_query=walking+lunge+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=walking+lunge+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "ham_curl",
         name: "Seated Hamstring Curl",
         target: "3 × 10–12 · RPE ~7",
-        video: "https://www.youtube.com/results?search_query=seated+hamstring+curl+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=seated+hamstring+curl+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "calf_raise",
         name: "Standing Calf Raises",
         target: "2 × 15 · RPE ~6",
-        video: "https://www.youtube.com/results?search_query=standing+calf+raise+exercise+tutorial"
+        video: "https://www.youtube.com/results?search_query=standing+calf+raise+exercise+tutorial",
+        kind: "strength"
       },
       {
         id: "intervals",
         name: "Battle Ropes / Row Intervals",
         target: "6 × 30s work / 30s rest",
-        video: "https://www.youtube.com/results?search_query=battle+ropes+hiit+workout"
+        video: "https://www.youtube.com/results?search_query=battle+ropes+hiit+workout",
+        kind: "strength" // keep strength-style logging for now
       }
     ]
   }
@@ -147,6 +164,10 @@ const setRpeInput = document.getElementById("set-rpe");
 const addSetBtn = document.getElementById("add-set-btn");
 const setsListEl = document.getElementById("sets-list");
 
+const labelWeight = document.getElementById("label-weight");
+const labelReps = document.getElementById("label-reps");
+const labelRpe = document.getElementById("label-rpe");
+
 const sessionFooter = document.getElementById("session-footer");
 const sessionNotes = document.getElementById("session-notes");
 const saveSessionBtn = document.getElementById("save-session-btn");
@@ -162,19 +183,17 @@ const navButtons = document.querySelectorAll(".nav-btn");
 
 // ====== STATE ======
 
-let currentDay = null;          // {id, name, exercises}
-let currentExercise = null;     // {id, name, target, video}
-let currentSets = [];           // pointer to the currently selected exercise's sets
-let sessionExercises = {};      // { exerciseId: { name, sets: [] } }
+let currentDay = null;
+let currentExercise = null;
+let currentSets = [];
+let sessionExercises = {}; // { exerciseId: { name, sets: [] } }
 
 // ====== INITIAL SETUP ======
 
 function init() {
-  // Prefill date with today
   const today = new Date().toISOString().split("T")[0];
   dateInput.value = today;
 
-  // Populate day select
   WORKOUT_PLAN.forEach(day => {
     const opt = document.createElement("option");
     opt.value = day.id;
@@ -182,7 +201,6 @@ function init() {
     daySelect.appendChild(opt);
   });
 
-  // Event listeners
   loadPlanBtn.addEventListener("click", onLoadPlan);
   addSetBtn.addEventListener("click", onAddSet);
   saveSessionBtn.addEventListener("click", onSaveSession);
@@ -262,7 +280,6 @@ function onLoadPlan() {
   exercisesSection.hidden = false;
   sessionFooter.hidden = false;
 
-  // Initialize per-exercise storage for this session
   sessionExercises = {};
   currentDay.exercises.forEach(ex => {
     sessionExercises[ex.id] = {
@@ -306,7 +323,6 @@ function renderExerciseList(day) {
     tag.textContent = day.tag || "Exercise";
     right.appendChild(tag);
 
-    // Sets badge
     const exData = sessionExercises[ex.id];
     const setCount = exData && exData.sets ? exData.sets.length : 0;
     const setsBadge = document.createElement("div");
@@ -314,7 +330,6 @@ function renderExerciseList(day) {
     setsBadge.textContent = `${setCount} set${setCount === 1 ? "" : "s"}`;
     right.appendChild(setsBadge);
 
-    // Video icon, if present
     if (ex.video) {
       const videoBtn = document.createElement("button");
       videoBtn.className = "icon-button";
@@ -331,7 +346,6 @@ function renderExerciseList(day) {
     item.appendChild(main);
     item.appendChild(right);
 
-    // Clicking the whole row (except video button) selects exercise
     item.addEventListener("click", () => selectExercise(ex));
 
     exerciseListEl.appendChild(item);
@@ -350,6 +364,18 @@ function selectExercise(ex) {
 
   loggerExerciseName.textContent = ex.name;
   loggerTarget.textContent = ex.target;
+
+  // Update labels depending on exercise kind
+  const kind = ex.kind || "strength";
+  if (kind === "treadmill") {
+    labelWeight.textContent = "Time (min)";
+    labelReps.textContent = "Speed (km/h)";
+    labelRpe.textContent = "Incline (%)";
+  } else {
+    labelWeight.textContent = "Weight (kg)";
+    labelReps.textContent = "Reps";
+    labelRpe.textContent = "RPE (1–10)";
+  }
 
   setWeightInput.value = "";
   setRepsInput.value = "";
@@ -370,14 +396,14 @@ function onAddSet() {
   const reps = parseInt(setRepsInput.value || "0", 10);
   const rpe = parseFloat(setRpeInput.value || "0");
 
-  if (!reps || reps <= 0) {
+  if (!reps && currentExercise.kind !== "treadmill") {
     alert("Please enter reps for the set.");
     return;
   }
 
   const newSet = {
     weight: isNaN(weight) ? null : weight,
-    reps,
+    reps: isNaN(reps) ? null : reps,
     rpe: isNaN(rpe) ? null : rpe
   };
 
@@ -408,14 +434,24 @@ function renderSets() {
     const li = document.createElement("li");
     li.className = "set-item";
 
-    const text = document.createElement("div");
-    const w = s.weight != null ? `${s.weight} kg` : "BW";
-    const r = `${s.reps} reps`;
-    text.textContent = `Set ${index + 1} – ${w}, ${r}`;
+    const kind = currentExercise ? currentExercise.kind || "strength" : "strength";
 
+    const text = document.createElement("div");
     const meta = document.createElement("div");
     meta.className = "set-meta";
-    meta.textContent = s.rpe != null ? `RPE ${s.rpe}` : "RPE n/a";
+
+    if (kind === "treadmill") {
+      const t = s.weight != null ? `${s.weight} min` : "? min";
+      const spd = s.reps != null ? `${s.reps} km/h` : "? km/h";
+      const inc = s.rpe != null ? `${s.rpe}%` : "?%";
+      text.textContent = `Set ${index + 1} – ${t}, ${spd}, incline ${inc}`;
+      meta.textContent = "";
+    } else {
+      const w = s.weight != null ? `${s.weight} kg` : "BW";
+      const r = s.reps != null ? `${s.reps} reps` : "reps ?";
+      text.textContent = `Set ${index + 1} – ${w}, ${r}`;
+      meta.textContent = s.rpe != null ? `RPE ${s.rpe}` : "RPE n/a";
+    }
 
     li.appendChild(text);
     li.appendChild(meta);
@@ -479,7 +515,7 @@ function loadSessions() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
-    return JSON.parse(raw) || [];
+  return JSON.parse(raw) || [];
   } catch (e) {
     console.error("Failed to parse sessions", e);
     return [];
