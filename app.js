@@ -1,55 +1,55 @@
 // ====== PLAN DEFINITION (YOUR PROGRAM) ======
 
 const WORKOUT_PLAN = [
-{
-  id: "day1",
-  name: "Day 1 – Full Body Strength + Conditioning",
-  tag: "Full Body",
-  exercises: [
-    {
-      id: "goblet_squat",
-      name: "Goblet Squat",
-      target: "3 × 10–12 · RPE ~7",
-      video: "https://www.youtube.com/results?search_query=goblet+squat+exercise+tutorial",
-      kind: "strength"
-    },
-    {
-      id: "lat_pulldown",
-      name: "Lat Pulldown",
-      target: "3 × 10–12 · RPE ~7",
-      video: "https://www.youtube.com/results?search_query=lat+pulldown+exercise+tutorial",
-      kind: "strength"
-    },
-    {
-      id: "db_chest_press",
-      name: "Dumbbell Chest Press",
-      target: "3 × 8–10 · RPE ~7",
-      video: "https://www.youtube.com/results?search_query=dumbbell+chest+press+exercise+tutorial",
-      kind: "strength"
-    },
-    {
-      id: "rdl",
-      name: "Romanian Deadlift",
-      target: "3 × 10–12 · RPE ~7",
-      video: "https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell+exercise+tutorial",
-      kind: "strength"
-    },
-    {
-      id: "face_pull",
-      name: "Cable Face Pulls",
-      target: "2 × 12–15 · RPE ~6",
-      video: "https://www.youtube.com/results?search_query=cable+face+pull+exercise+tutorial",
-      kind: "strength"
-    },
-    {
-      id: "incline_walk",
-      name: "Incline Treadmill Walk",
-      target: "10–15 min · moderate",
-      video: "https://www.youtube.com/results?search_query=incline+treadmill+walk+for+fat+loss",
-      kind: "treadmill"    // 👈 this tells the logger to use time/speed/incline
-    }
-  ]
-},
+  {
+    id: "day1",
+    name: "Day 1 – Full Body Strength + Conditioning",
+    tag: "Full Body",
+    exercises: [
+      {
+        id: "goblet_squat",
+        name: "Goblet Squat",
+        target: "3 × 10–12 · RPE ~7",
+        video: "https://www.youtube.com/results?search_query=goblet+squat+exercise+tutorial",
+        kind: "strength"
+      },
+      {
+        id: "lat_pulldown",
+        name: "Lat Pulldown",
+        target: "3 × 10–12 · RPE ~7",
+        video: "https://www.youtube.com/results?search_query=lat+pulldown+exercise+tutorial",
+        kind: "strength"
+      },
+      {
+        id: "db_chest_press",
+        name: "Dumbbell Chest Press",
+        target: "3 × 8–10 · RPE ~7",
+        video: "https://www.youtube.com/results?search_query=dumbbell+chest+press+exercise+tutorial",
+        kind: "strength"
+      },
+      {
+        id: "rdl",
+        name: "Romanian Deadlift",
+        target: "3 × 10–12 · RPE ~7",
+        video: "https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell+exercise+tutorial",
+        kind: "strength"
+      },
+      {
+        id: "face_pull",
+        name: "Cable Face Pulls",
+        target: "2 × 12–15 · RPE ~6",
+        video: "https://www.youtube.com/results?search_query=cable+face+pull+exercise+tutorial",
+        kind: "strength"
+      },
+      {
+        id: "incline_walk",
+        name: "Incline Treadmill Walk",
+        target: "10–15 min · moderate",
+        video: "https://www.youtube.com/results?search_query=incline+treadmill+walk+for+fat+loss",
+        kind: "treadmill"
+      }
+    ]
+  },
   {
     id: "day2",
     name: "Day 2 – Upper Body + Core",
@@ -137,7 +137,7 @@ const WORKOUT_PLAN = [
         name: "Battle Ropes / Row Intervals",
         target: "6 × 30s work / 30s rest",
         video: "https://www.youtube.com/results?search_query=battle+ropes+hiit+workout",
-        kind: "strength" // keep strength-style logging for now
+        kind: "strength" // still using strength-style logging
       }
     ]
   }
@@ -167,6 +167,9 @@ const setsListEl = document.getElementById("sets-list");
 const labelWeight = document.getElementById("label-weight");
 const labelReps = document.getElementById("label-reps");
 const labelRpe = document.getElementById("label-rpe");
+
+const summaryCard = document.getElementById("summary-card");
+const summaryListEl = document.getElementById("summary-list");
 
 const sessionFooter = document.getElementById("session-footer");
 const sessionNotes = document.getElementById("session-notes");
@@ -269,6 +272,105 @@ function setupNav() {
   });
 }
 
+// ====== HELPERS FOR PLAN ======
+
+function findExerciseDefinition(exId) {
+  for (const day of WORKOUT_PLAN) {
+    for (const ex of day.exercises) {
+      if (ex.id === exId) return ex;
+    }
+  }
+  return null;
+}
+
+// ====== SESSION STATS (AUTO-VOLUME) ======
+
+function computeSessionStats() {
+  let totalStrengthSets = 0;
+  let totalVolume = 0;          // kg * reps
+  let totalCardioMinutes = 0;
+  let strengthExercisesUsed = 0;
+  let cardioExercisesUsed = 0;
+
+  Object.entries(sessionExercises).forEach(([id, data]) => {
+    const def = findExerciseDefinition(id);
+    const kind = def && def.kind ? def.kind : "strength";
+    const sets = data.sets || [];
+
+    if (sets.length === 0) return;
+
+    if (kind === "treadmill") {
+      cardioExercisesUsed += 1;
+      sets.forEach(s => {
+        const minutes = typeof s.weight === "number" ? s.weight : 0; // weight field stores time
+        totalCardioMinutes += minutes;
+      });
+    } else {
+      strengthExercisesUsed += 1;
+      sets.forEach(s => {
+        totalStrengthSets += 1;
+        const w = typeof s.weight === "number" ? s.weight : 0;
+        const r = typeof s.reps === "number" ? s.reps : 0;
+        totalVolume += w * r;
+      });
+    }
+  });
+
+  return {
+    totalStrengthSets,
+    totalVolume,
+    totalCardioMinutes,
+    strengthExercisesUsed,
+    cardioExercisesUsed
+  };
+}
+
+function updateSummaryCard() {
+  if (!summaryCard || !summaryListEl) return;
+
+  const stats = computeSessionStats();
+  const {
+    totalStrengthSets,
+    totalVolume,
+    totalCardioMinutes,
+    strengthExercisesUsed,
+    cardioExercisesUsed
+  } = stats;
+
+  const hasAny =
+    totalStrengthSets > 0 ||
+    totalCardioMinutes > 0;
+
+  if (!hasAny) {
+    summaryCard.hidden = true;
+    summaryListEl.innerHTML = "<li>No work logged yet.</li>";
+    return;
+  }
+
+  summaryCard.hidden = false;
+  summaryListEl.innerHTML = "";
+
+  const li1 = document.createElement("li");
+  li1.textContent =
+    `Strength: ${totalStrengthSets} set` +
+    (totalStrengthSets === 1 ? "" : "s") +
+    ` across ${strengthExercisesUsed} exercise` +
+    (strengthExercisesUsed === 1 ? "" : "s") +
+    `.`;
+
+  const li2 = document.createElement("li");
+  li2.textContent = `Total strength volume: ${Math.round(totalVolume)} kg·reps.`;
+
+  const li3 = document.createElement("li");
+  li3.textContent =
+    `Cardio: ${Math.round(totalCardioMinutes * 10) / 10} min` +
+    (cardioExercisesUsed ? ` across ${cardioExercisesUsed} exercise(s).` : ".");
+
+  summaryListEl.appendChild(li1);
+  summaryListEl.appendChild(li2);
+  summaryListEl.appendChild(li3);
+}
+
 // ====== PLAN / EXERCISE RENDERING ======
 
 function onLoadPlan() {
@@ -292,6 +394,7 @@ function onLoadPlan() {
   resetLogger();
   sessionNotes.value = "";
   saveStatus.textContent = "";
+  updateSummaryCard();
 }
 
 function renderExerciseList(day) {
@@ -365,7 +468,6 @@ function selectExercise(ex) {
   loggerExerciseName.textContent = ex.name;
   loggerTarget.textContent = ex.target;
 
-  // Update labels depending on exercise kind
   const kind = ex.kind || "strength";
   if (kind === "treadmill") {
     labelWeight.textContent = "Time (min)";
@@ -396,7 +498,9 @@ function onAddSet() {
   const reps = parseInt(setRepsInput.value || "0", 10);
   const rpe = parseFloat(setRpeInput.value || "0");
 
-  if (!reps && currentExercise.kind !== "treadmill") {
+  const kind = currentExercise.kind || "strength";
+
+  if (kind !== "treadmill" && (!reps || reps <= 0)) {
     alert("Please enter reps for the set.");
     return;
   }
@@ -416,6 +520,7 @@ function onAddSet() {
 
   renderSets();
   renderExerciseList(currentDay);
+  updateSummaryCard();
   saveStatus.textContent = "";
 }
 
@@ -450,7 +555,16 @@ function renderSets() {
       const w = s.weight != null ? `${s.weight} kg` : "BW";
       const r = s.reps != null ? `${s.reps} reps` : "reps ?";
       text.textContent = `Set ${index + 1} – ${w}, ${r}`;
-      meta.textContent = s.rpe != null ? `RPE ${s.rpe}` : "RPE n/a";
+
+      const vol = (typeof s.weight === "number" && typeof s.reps === "number")
+        ? s.weight * s.reps
+        : null;
+
+      const parts = [];
+      if (s.rpe != null) parts.push(`RPE ${s.rpe}`);
+      if (vol != null) parts.push(`${vol} kg·reps`);
+
+      meta.textContent = parts.length ? parts.join(" · ") : "RPE / volume n/a";
     }
 
     li.appendChild(text);
@@ -487,7 +601,9 @@ function onSaveSession() {
     return;
   }
 
+  const stats = computeSessionStats();
   const notes = sessionNotes.value.trim();
+
   const sessionData = {
     id: sessionId,
     date,
@@ -495,6 +611,7 @@ function onSaveSession() {
     dayName: currentDay.name,
     notes,
     exercises: setsByExercise,
+    summary: stats,
     savedAt: new Date().toISOString()
   };
 
@@ -507,6 +624,7 @@ function onSaveSession() {
 
   saveSessions(sessions);
   renderHistory();
+  updateSummaryCard();
   saveStatus.textContent = "Session saved ✅";
   setTimeout(() => (saveStatus.textContent = ""), 2500);
 }
@@ -515,7 +633,7 @@ function loadSessions() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
-  return JSON.parse(raw) || [];
+    return JSON.parse(raw) || [];
   } catch (e) {
     console.error("Failed to parse sessions", e);
     return [];
@@ -558,12 +676,25 @@ function renderHistory() {
     meta.className = "history-item-meta";
 
     const exerciseCount = Object.keys(sess.exercises || {}).length;
+    let summaryText = "";
+
+    if (sess.summary) {
+      const s = sess.summary;
+      summaryText =
+        `Strength sets: ${s.totalStrengthSets}, ` +
+        `Volume: ${Math.round(s.totalVolume)} kg·reps, ` +
+        `Cardio: ${Math.round(s.totalCardioMinutes * 10) / 10} min.`;
+    } else {
+      summaryText = "No summary stats (old session).";
+    }
+
     const notesShort =
       sess.notes && sess.notes.length > 0
-        ? `Notes: ${sess.notes.slice(0, 60)}${sess.notes.length > 60 ? "..." : ""}`
+        ? `Notes: ${sess.notes.slice(0, 50)}${sess.notes.length > 50 ? "..." : ""}`
         : "No notes.";
 
-    meta.textContent = `Exercises logged: ${exerciseCount} · ${notesShort}`;
+    meta.textContent =
+      `Exercises logged: ${exerciseCount} · ${summaryText} · ${notesShort}`;
 
     li.appendChild(title);
     li.appendChild(meta);
