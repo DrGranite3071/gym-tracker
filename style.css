@@ -447,6 +447,13 @@ body.light-theme .nav-btn {
   padding-top: 0.25rem;
 }
 
+}
+
+.small-hint {
+  font-size: 0.75rem;
+  margin-top: 0.2rem;
+}
+
 @media (min-width: 720px) {
   .app-main {
     padding: 1rem 0;
