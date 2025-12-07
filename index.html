@@ -6,7 +6,7 @@
   <title>Gym Tracker</title>
 
   <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=4" />
 
   <meta name="theme-color" content="#111111" />
 </head>
@@ -27,6 +27,37 @@
   </header>
 
   <main class="app-main">
+    <!-- About / info card -->
+    <section class="card" id="about-card">
+      <h2>About this Program</h2>
+      <p>
+        This is a <strong>beginner-friendly, 3-days-per-week</strong> program
+        focused on <strong>strength</strong> and <strong>fat loss</strong>.
+        Each session should take about <strong>60–90 minutes</strong>
+        including warm-up, rest between sets, and short conditioning.
+      </p>
+      <p>
+        Training is based on <strong>full-body strength work</strong> plus
+        <strong>simple conditioning</strong> (like incline treadmill walking
+        or intervals).
+      </p>
+
+      <h3>Abbreviations</h3>
+      <ul class="about-list">
+        <li><strong>RPE</strong> – Rate of Perceived Exertion (1–10 scale).
+          <br />RPE 6 = easy–moderate, RPE 7–8 = hard but 2–3 reps left,
+          RPE 9 = very hard (maybe 1 rep left),
+          <strong>RPE 10 = all-out, no reps left</strong>.
+          Your plan mostly stays at RPE 6–8 (not to failure).
+        </li>
+        <li><strong>Set</strong> – a group of consecutive reps.</li>
+        <li><strong>Rep</strong> – one full repetition of an exercise.</li>
+        <li><strong>Full body</strong> – you train upper & lower body
+          in the same session.
+        </li>
+      </ul>
+    </section>
+
     <!-- Session setup -->
     <section class="card">
       <h2>Session Setup</h2>
@@ -47,7 +78,7 @@
     <section class="card" id="exercises-section" hidden>
       <h2>Exercises</h2>
       <p class="hint">
-        Tap an exercise to log sets (weight, reps, RPE). Tap ▶ for a tutorial video.
+        Tap an exercise to log sets. Tap ▶ for a tutorial video.
       </p>
       <div id="exercise-list"></div>
     </section>
@@ -61,15 +92,15 @@
 
       <div class="logger-form">
         <div class="field">
-          <label for="set-weight">Weight (kg)</label>
+          <label for="set-weight" id="label-weight">Weight (kg)</label>
           <input type="number" id="set-weight" inputmode="decimal" />
         </div>
         <div class="field">
-          <label for="set-reps">Reps</label>
+          <label for="set-reps" id="label-reps">Reps</label>
           <input type="number" id="set-reps" inputmode="numeric" />
         </div>
         <div class="field">
-          <label for="set-rpe">RPE (1–10)</label>
+          <label for="set-rpe" id="label-rpe">RPE (1–10)</label>
           <input type="number" id="set-rpe" min="1" max="10" />
         </div>
         <button id="add-set-btn" class="btn">Add Set</button>
@@ -113,6 +144,7 @@
 
   <footer class="app-footer">
     <div class="nav-bar">
+      <button class="nav-btn" data-target="about-card">About</button>
       <button class="nav-btn" data-target="top">Home</button>
       <button class="nav-btn" data-target="exercises-section">Session</button>
       <button class="nav-btn" data-target="history-card">History</button>
@@ -120,6 +152,6 @@
     <p class="footer-note">Data stored locally · PWA-ready</p>
   </footer>
 
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
