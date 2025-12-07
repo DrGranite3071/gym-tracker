@@ -127,6 +127,7 @@ const WORKOUT_PLAN = [
 ];
 
 const STORAGE_KEY = "gymTrackerSessions_v1";
+const THEME_KEY = "gymTrackerTheme";
 
 // ====== DOM ELEMENTS ======
 
@@ -155,6 +156,9 @@ const toggleHistoryBtn = document.getElementById("toggle-history-btn");
 const historySection = document.getElementById("history-section");
 const historyListEl = document.getElementById("history-list");
 const clearHistoryBtn = document.getElementById("clear-history-btn");
+
+const themeToggleBtn = document.getElementById("theme-toggle");
+const navButtons = document.querySelectorAll(".nav-btn");
 
 // ====== STATE ======
 
@@ -185,13 +189,66 @@ function init() {
   toggleHistoryBtn.addEventListener("click", toggleHistory);
   clearHistoryBtn.addEventListener("click", clearHistory);
 
-  // Load history initially (but keep hidden)
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener("click", toggleTheme);
+  }
+
+  setupNav();
+  setupTheme();
   renderHistory();
 
-  // Register service worker if available
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js").catch(console.error);
   }
+}
+
+// ====== THEME ======
+
+function setupTheme() {
+  const stored = localStorage.getItem(THEME_KEY);
+  const prefersLight = window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: light)").matches;
+
+  const mode = stored || (prefersLight ? "light" : "dark");
+
+  if (mode === "light") {
+    document.body.classList.add("light-theme");
+  } else {
+    document.body.classList.remove("light-theme");
+  }
+  updateThemeToggleIcon(mode);
+}
+
+function toggleTheme() {
+  const isLight = document.body.classList.toggle("light-theme");
+  const mode = isLight ? "light" : "dark";
+  localStorage.setItem(THEME_KEY, mode);
+  updateThemeToggleIcon(mode);
+}
+
+function updateThemeToggleIcon(mode) {
+  if (!themeToggleBtn) return;
+  themeToggleBtn.textContent = mode === "light" ? "☀" : "☾";
+}
+
+// ====== NAV BAR ======
+
+function setupNav() {
+  navButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.dataset.target;
+      if (!targetId) return;
+
+      if (targetId === "top") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const el = document.getElementById(targetId);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    });
+  });
 }
 
 // ====== PLAN / EXERCISE RENDERING ======
@@ -284,7 +341,6 @@ function renderExerciseList(day) {
 function selectExercise(ex) {
   currentExercise = ex;
 
-  // Ensure the exercise entry exists
   if (!sessionExercises[ex.id]) {
     sessionExercises[ex.id] = { name: ex.name, sets: [] };
   }
@@ -333,7 +389,7 @@ function onAddSet() {
   setRpeInput.value = "";
 
   renderSets();
-  renderExerciseList(currentDay); // update set counts on list
+  renderExerciseList(currentDay);
   saveStatus.textContent = "";
 }
 
@@ -380,7 +436,6 @@ function onSaveSession() {
   const sessions = loadSessions();
   const sessionId = `${date}_${currentDay.id}`;
 
-  // Build compact exercises object (only those that have sets)
   const setsByExercise = {};
   Object.entries(sessionExercises).forEach(([id, data]) => {
     if (data.sets && data.sets.length > 0) {
