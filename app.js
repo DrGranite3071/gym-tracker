@@ -1,0 +1,365 @@
+// ====== PLAN DEFINITION (YOUR PROGRAM) ======
+
+const WORKOUT_PLAN = [
+  {
+    id: "day1",
+    name: "Day 1 – Full Body Strength + Conditioning",
+    tag: "Full Body",
+    exercises: [
+      { id: "goblet_squat", name: "Goblet Squat", target: "3 × 10–12 · RPE ~7" },
+      { id: "lat_pulldown", name: "Lat Pulldown", target: "3 × 10–12 · RPE ~7" },
+      { id: "db_chest_press", name: "Dumbbell Chest Press", target: "3 × 8–10 · RPE ~7" },
+      { id: "rdl", name: "Romanian Deadlift", target: "3 × 10–12 · RPE ~7" },
+      { id: "face_pull", name: "Cable Face Pulls", target: "2 × 12–15 · RPE ~6" },
+      { id: "incline_walk", name: "Incline Treadmill Walk", target: "10–15 min · moderate" }
+    ]
+  },
+  {
+    id: "day2",
+    name: "Day 2 – Upper Body + Core",
+    tag: "Upper + Core",
+    exercises: [
+      { id: "seated_row", name: "Seated Row (Machine/Cable)", target: "3 × 10–12 · RPE ~7" },
+      { id: "oh_press", name: "Overhead Dumbbell Press", target: "3 × 8–10 · RPE ~7" },
+      { id: "db_curl", name: "Dumbbell Bicep Curl", target: "2 × 10–12 · RPE ~6" },
+      { id: "tri_pushdown", name: "Cable Triceps Pushdown", target: "2 × 10–12 · RPE ~6" },
+      { id: "knee_raises", name: "Hanging Knee Raises", target: "3 × 10–15 · RPE ~6" },
+      { id: "woodchop", name: "Cable Woodchoppers", target: "2 × 12 / side · RPE ~6" }
+    ]
+  },
+  {
+    id: "day3",
+    name: "Day 3 – Lower Body + Conditioning",
+    tag: "Lower + Cardio",
+    exercises: [
+      { id: "leg_press", name: "Leg Press", target: "3 × 10–12 · RPE ~7" },
+      { id: "walking_lunge", name: "Walking Lunges", target: "2 × 12 steps / leg · RPE ~7" },
+      { id: "ham_curl", name: "Seated Hamstring Curl", target: "3 × 10–12 · RPE ~7" },
+      { id: "calf_raise", name: "Standing Calf Raises", target: "2 × 15 · RPE ~6" },
+      { id: "intervals", name: "Battle Ropes / Row Intervals", target: "6 × 30s work / 30s rest" }
+    ]
+  }
+];
+
+const STORAGE_KEY = "gymTrackerSessions_v1";
+
+// ====== DOM ELEMENTS ======
+
+const dateInput = document.getElementById("session-date");
+const daySelect = document.getElementById("day-select");
+const loadPlanBtn = document.getElementById("load-plan-btn");
+
+const exercisesSection = document.getElementById("exercises-section");
+const exerciseListEl = document.getElementById("exercise-list");
+
+const loggerSection = document.getElementById("logger-section");
+const loggerExerciseName = document.getElementById("logger-exercise-name");
+const loggerTarget = document.getElementById("logger-target");
+const setWeightInput = document.getElementById("set-weight");
+const setRepsInput = document.getElementById("set-reps");
+const setRpeInput = document.getElementById("set-rpe");
+const addSetBtn = document.getElementById("add-set-btn");
+const setsListEl = document.getElementById("sets-list");
+
+const sessionFooter = document.getElementById("session-footer");
+const sessionNotes = document.getElementById("session-notes");
+const saveSessionBtn = document.getElementById("save-session-btn");
+const saveStatus = document.getElementById("save-status");
+
+const toggleHistoryBtn = document.getElementById("toggle-history-btn");
+const historySection = document.getElementById("history-section");
+const historyListEl = document.getElementById("history-list");
+const clearHistoryBtn = document.getElementById("clear-history-btn");
+
+// ====== STATE ======
+
+let currentDay = null;       // {id, name, exercises}
+let currentExercise = null;  // {id, name, target}
+let currentSets = [];        // array of { weight, reps, rpe }
+
+// ====== INITIAL SETUP ======
+
+function init() {
+  // Prefill date with today
+  const today = new Date().toISOString().split("T")[0];
+  dateInput.value = today;
+
+  // Populate day select
+  WORKOUT_PLAN.forEach(day => {
+    const opt = document.createElement("option");
+    opt.value = day.id;
+    opt.textContent = day.name;
+    daySelect.appendChild(opt);
+  });
+
+  // Event listeners
+  loadPlanBtn.addEventListener("click", onLoadPlan);
+  addSetBtn.addEventListener("click", onAddSet);
+  saveSessionBtn.addEventListener("click", onSaveSession);
+  toggleHistoryBtn.addEventListener("click", toggleHistory);
+  clearHistoryBtn.addEventListener("click", clearHistory);
+
+  // Load history initially (but keep hidden)
+  renderHistory();
+
+  // Register service worker if available
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js").catch(console.error);
+  }
+}
+
+// ====== PLAN / EXERCISE RENDERING ======
+
+function onLoadPlan() {
+  const dayId = daySelect.value;
+  const selectedDay = WORKOUT_PLAN.find(d => d.id === dayId);
+  if (!selectedDay) return;
+
+  currentDay = selectedDay;
+  exercisesSection.hidden = false;
+  sessionFooter.hidden = false;
+
+  renderExerciseList(selectedDay);
+  resetLogger();
+  saveStatus.textContent = "";
+}
+
+function renderExerciseList(day) {
+  exerciseListEl.innerHTML = "";
+  day.exercises.forEach(ex => {
+    const item = document.createElement("div");
+    item.className = "exercise-item";
+    item.dataset.exerciseId = ex.id;
+
+    const main = document.createElement("div");
+    main.className = "exercise-main";
+
+    const name = document.createElement("div");
+    name.className = "exercise-name";
+    name.textContent = ex.name;
+
+    const target = document.createElement("div");
+    target.className = "exercise-target";
+    target.textContent = ex.target;
+
+    main.appendChild(name);
+    main.appendChild(target);
+
+    const tag = document.createElement("div");
+    tag.className = "exercise-tag";
+    tag.textContent = currentDay.tag || "Exercise";
+
+    item.appendChild(main);
+    item.appendChild(tag);
+
+    item.addEventListener("click", () => selectExercise(ex));
+
+    exerciseListEl.appendChild(item);
+  });
+}
+
+function selectExercise(ex) {
+  currentExercise = ex;
+  currentSets = [];
+  loggerSection.hidden = false;
+
+  loggerExerciseName.textContent = ex.name;
+  loggerTarget.textContent = ex.target;
+
+  setWeightInput.value = "";
+  setRepsInput.value = "";
+  setRpeInput.value = "";
+
+  renderSets();
+}
+
+// ====== SET LOGGING ======
+
+function onAddSet() {
+  if (!currentExercise) return;
+
+  const weight = parseFloat(setWeightInput.value || "0");
+  const reps = parseInt(setRepsInput.value || "0", 10);
+  const rpe = parseFloat(setRpeInput.value || "0");
+
+  if (!reps || reps <= 0) {
+    alert("Please enter reps for the set.");
+    return;
+  }
+
+  currentSets.push({
+    weight: isNaN(weight) ? null : weight,
+    reps,
+    rpe: isNaN(rpe) ? null : rpe
+  });
+
+  setWeightInput.value = "";
+  setRepsInput.value = "";
+  setRpeInput.value = "";
+
+  renderSets();
+  saveStatus.textContent = "";
+}
+
+function renderSets() {
+  setsListEl.innerHTML = "";
+
+  if (!currentSets.length) {
+    const li = document.createElement("li");
+    li.textContent = "No sets logged yet.";
+    li.className = "set-meta";
+    setsListEl.appendChild(li);
+    return;
+  }
+
+  currentSets.forEach((s, index) => {
+    const li = document.createElement("li");
+    li.className = "set-item";
+
+    const text = document.createElement("div");
+    const w = s.weight != null ? `${s.weight} kg` : "BW";
+    const r = `${s.reps} reps`;
+    text.textContent = `Set ${index + 1} – ${w}, ${r}`;
+
+    const meta = document.createElement("div");
+    meta.className = "set-meta";
+    meta.textContent = s.rpe != null ? `RPE ${s.rpe}` : "RPE n/a";
+
+    li.appendChild(text);
+    li.appendChild(meta);
+    setsListEl.appendChild(li);
+  });
+}
+
+// ====== SESSION SAVE / LOAD ======
+
+function onSaveSession() {
+  if (!currentDay) {
+    alert("Select a workout day first.");
+    return;
+  }
+
+  const date = dateInput.value || new Date().toISOString().split("T")[0];
+
+  // Structure: one session per date+day, holding sets grouped by exercise
+  const sessions = loadSessions();
+
+  const sessionId = `${date}_${currentDay.id}`;
+  const setsByExercise = {};
+
+  // For now, we only store the last exercise you logged sets for.
+  // Future improvement: allow switching between exercises and keeping sets per exercise in memory.
+  if (currentExercise && currentSets.length) {
+    setsByExercise[currentExercise.id] = {
+      name: currentExercise.name,
+      sets: currentSets.slice()
+    };
+  }
+
+  const existingIndex = sessions.findIndex(s => s.id === sessionId);
+  const notes = sessionNotes.value.trim();
+
+  const sessionData = {
+    id: sessionId,
+    date,
+    dayId: currentDay.id,
+    dayName: currentDay.name,
+    notes,
+    exercises: setsByExercise,
+    savedAt: new Date().toISOString()
+  };
+
+  if (existingIndex >= 0) {
+    sessions[existingIndex] = sessionData;
+  } else {
+    sessions.push(sessionData);
+  }
+
+  saveSessions(sessions);
+  renderHistory();
+  saveStatus.textContent = "Session saved ✅";
+  setTimeout(() => (saveStatus.textContent = ""), 2500);
+}
+
+function loadSessions() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw) || [];
+  } catch (e) {
+    console.error("Failed to parse sessions", e);
+    return [];
+  }
+}
+
+function saveSessions(list) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  } catch (e) {
+    console.error("Failed to save sessions", e);
+  }
+}
+
+// ====== HISTORY ======
+
+function renderHistory() {
+  const sessions = loadSessions().sort((a, b) =>
+    a.date < b.date ? 1 : -1
+  );
+  historyListEl.innerHTML = "";
+
+  if (!sessions.length) {
+    const li = document.createElement("li");
+    li.className = "history-item";
+    li.textContent = "No sessions saved yet.";
+    historyListEl.appendChild(li);
+    return;
+  }
+
+  sessions.forEach(sess => {
+    const li = document.createElement("li");
+    li.className = "history-item";
+
+    const title = document.createElement("div");
+    title.className = "history-item-title";
+    title.textContent = `${sess.date} – ${sess.dayName}`;
+
+    const meta = document.createElement("div");
+    meta.className = "history-item-meta";
+
+    const notesShort =
+      sess.notes && sess.notes.length > 0
+        ? `Notes: ${sess.notes.slice(0, 60)}${sess.notes.length > 60 ? "..." : ""}`
+        : "No notes.";
+
+    meta.textContent = notesShort;
+
+    li.appendChild(title);
+    li.appendChild(meta);
+    historyListEl.appendChild(li);
+  });
+}
+
+function toggleHistory() {
+  historySection.hidden = !historySection.hidden;
+}
+
+function clearHistory() {
+  if (!confirm("Delete ALL saved sessions? This cannot be undone.")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  renderHistory();
+}
+
+// ====== UTIL ======
+
+function resetLogger() {
+  loggerSection.hidden = true;
+  loggerExerciseName.textContent = "";
+  loggerTarget.textContent = "";
+  setsListEl.innerHTML = "";
+  currentExercise = null;
+  currentSets = [];
+}
+
+// ====== INIT ======
+document.addEventListener("DOMContentLoaded", init);
