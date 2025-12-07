@@ -6,7 +6,7 @@
   <title>Gym Tracker</title>
 
   <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=5" />
 
   <meta name="theme-color" content="#111111" />
 </head>
@@ -112,6 +112,14 @@
       </div>
     </section>
 
+    <!-- Session summary -->
+    <section class="card" id="summary-card" hidden>
+      <h2>Session Summary (Live)</h2>
+      <ul id="summary-list" class="summary-list">
+        <!-- Filled by JS -->
+      </ul>
+    </section>
+
     <!-- Notes + Save -->
     <section class="card" id="session-footer" hidden>
       <h2>Session Notes</h2>
@@ -152,6 +160,6 @@
     <p class="footer-note">Data stored locally · PWA-ready</p>
   </footer>
 
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>
