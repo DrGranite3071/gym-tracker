@@ -1,4 +1,8 @@
-# gym-tracker the journey
+# Gym Tracker v0.5 -- the journey --
+
+---
+
+### Message form our sponsor
 
 Hey Guys, I'm Dr. Bob!
 
