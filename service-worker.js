@@ -1,9 +1,9 @@
-const CACHE_NAME = "gym-tracker-cache-v4";
+const CACHE_NAME = "gym-tracker-cache-v6";
 const STATIC_ASSETS = [
   "./",
   "./index.html",
-  "./style.css?v=4",
-  "./app.js?v=4",
+  "./style.css?v=5",
+  "./app.js?v=6",
   "./manifest.json"
 ];
 
