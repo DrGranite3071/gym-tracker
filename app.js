@@ -6,12 +6,42 @@ const WORKOUT_PLAN = [
     name: "Day 1 – Full Body Strength + Conditioning",
     tag: "Full Body",
     exercises: [
-      { id: "goblet_squat", name: "Goblet Squat", target: "3 × 10–12 · RPE ~7" },
-      { id: "lat_pulldown", name: "Lat Pulldown", target: "3 × 10–12 · RPE ~7" },
-      { id: "db_chest_press", name: "Dumbbell Chest Press", target: "3 × 8–10 · RPE ~7" },
-      { id: "rdl", name: "Romanian Deadlift", target: "3 × 10–12 · RPE ~7" },
-      { id: "face_pull", name: "Cable Face Pulls", target: "2 × 12–15 · RPE ~6" },
-      { id: "incline_walk", name: "Incline Treadmill Walk", target: "10–15 min · moderate" }
+      {
+        id: "goblet_squat",
+        name: "Goblet Squat",
+        target: "3 × 10–12 · RPE ~7",
+        video: "https://www.youtube.com/results?search_query=goblet+squat+exercise+tutorial"
+      },
+      {
+        id: "lat_pulldown",
+        name: "Lat Pulldown",
+        target: "3 × 10–12 · RPE ~7",
+        video: "https://www.youtube.com/results?search_query=lat+pulldown+exercise+tutorial"
+      },
+      {
+        id: "db_chest_press",
+        name: "Dumbbell Chest Press",
+        target: "3 × 8–10 · RPE ~7",
+        video: "https://www.youtube.com/results?search_query=dumbbell+chest+press+exercise+tutorial"
+      },
+      {
+        id: "rdl",
+        name: "Romanian Deadlift",
+        target: "3 × 10–12 · RPE ~7",
+        video: "https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell+exercise+tutorial"
+      },
+      {
+        id: "face_pull",
+        name: "Cable Face Pulls",
+        target: "2 × 12–15 · RPE ~6",
+        video: "https://www.youtube.com/results?search_query=cable+face+pull+exercise+tutorial"
+      },
+      {
+        id: "incline_walk",
+        name: "Incline Treadmill Walk",
+        target: "10–15 min · moderate",
+        video: "https://www.youtube.com/results?search_query=incline+treadmill+walk+for+fat+loss"
+      }
     ]
   },
   {
@@ -19,12 +49,42 @@ const WORKOUT_PLAN = [
     name: "Day 2 – Upper Body + Core",
     tag: "Upper + Core",
     exercises: [
-      { id: "seated_row", name: "Seated Row (Machine/Cable)", target: "3 × 10–12 · RPE ~7" },
-      { id: "oh_press", name: "Overhead Dumbbell Press", target: "3 × 8–10 · RPE ~7" },
-      { id: "db_curl", name: "Dumbbell Bicep Curl", target: "2 × 10–12 · RPE ~6" },
-      { id: "tri_pushdown", name: "Cable Triceps Pushdown", target: "2 × 10–12 · RPE ~6" },
-      { id: "knee_raises", name: "Hanging Knee Raises", target: "3 × 10–15 · RPE ~6" },
-      { id: "woodchop", name: "Cable Woodchoppers", target: "2 × 12 / side · RPE ~6" }
+      {
+        id: "seated_row",
+        name: "Seated Row (Machine/Cable)",
+        target: "3 × 10–12 · RPE ~7",
+        video: "https://www.youtube.com/results?search_query=seated+row+machine+exercise+tutorial"
+      },
+      {
+        id: "oh_press",
+        name: "Overhead Dumbbell Press",
+        target: "3 × 8–10 · RPE ~7",
+        video: "https://www.youtube.com/results?search_query=overhead+dumbbell+press+exercise+tutorial"
+      },
+      {
+        id: "db_curl",
+        name: "Dumbbell Bicep Curl",
+        target: "2 × 10–12 · RPE ~6",
+        video: "https://www.youtube.com/results?search_query=dumbbell+bicep+curl+exercise+tutorial"
+      },
+      {
+        id: "tri_pushdown",
+        name: "Cable Triceps Pushdown",
+        target: "2 × 10–12 · RPE ~6",
+        video: "https://www.youtube.com/results?search_query=cable+tricep+pushdown+exercise+tutorial"
+      },
+      {
+        id: "knee_raises",
+        name: "Hanging Knee Raises",
+        target: "3 × 10–15 · RPE ~6",
+        video: "https://www.youtube.com/results?search_query=hanging+knee+raise+exercise+tutorial"
+      },
+      {
+        id: "woodchop",
+        name: "Cable Woodchoppers",
+        target: "2 × 12 / side · RPE ~6",
+        video: "https://www.youtube.com/results?search_query=cable+woodchopper+exercise+tutorial"
+      }
     ]
   },
   {
@@ -32,11 +92,36 @@ const WORKOUT_PLAN = [
     name: "Day 3 – Lower Body + Conditioning",
     tag: "Lower + Cardio",
     exercises: [
-      { id: "leg_press", name: "Leg Press", target: "3 × 10–12 · RPE ~7" },
-      { id: "walking_lunge", name: "Walking Lunges", target: "2 × 12 steps / leg · RPE ~7" },
-      { id: "ham_curl", name: "Seated Hamstring Curl", target: "3 × 10–12 · RPE ~7" },
-      { id: "calf_raise", name: "Standing Calf Raises", target: "2 × 15 · RPE ~6" },
-      { id: "intervals", name: "Battle Ropes / Row Intervals", target: "6 × 30s work / 30s rest" }
+      {
+        id: "leg_press",
+        name: "Leg Press",
+        target: "3 × 10–12 · RPE ~7",
+        video: "https://www.youtube.com/results?search_query=leg+press+machine+exercise+tutorial"
+      },
+      {
+        id: "walking_lunge",
+        name: "Walking Lunges",
+        target: "2 × 12 steps / leg · RPE ~7",
+        video: "https://www.youtube.com/results?search_query=walking+lunge+exercise+tutorial"
+      },
+      {
+        id: "ham_curl",
+        name: "Seated Hamstring Curl",
+        target: "3 × 10–12 · RPE ~7",
+        video: "https://www.youtube.com/results?search_query=seated+hamstring+curl+exercise+tutorial"
+      },
+      {
+        id: "calf_raise",
+        name: "Standing Calf Raises",
+        target: "2 × 15 · RPE ~6",
+        video: "https://www.youtube.com/results?search_query=standing+calf+raise+exercise+tutorial"
+      },
+      {
+        id: "intervals",
+        name: "Battle Ropes / Row Intervals",
+        target: "6 × 30s work / 30s rest",
+        video: "https://www.youtube.com/results?search_query=battle+ropes+hiit+workout"
+      }
     ]
   }
 ];
@@ -73,9 +158,10 @@ const clearHistoryBtn = document.getElementById("clear-history-btn");
 
 // ====== STATE ======
 
-let currentDay = null;       // {id, name, exercises}
-let currentExercise = null;  // {id, name, target}
-let currentSets = [];        // array of { weight, reps, rpe }
+let currentDay = null;          // {id, name, exercises}
+let currentExercise = null;     // {id, name, target, video}
+let currentSets = [];           // pointer to the currently selected exercise's sets
+let sessionExercises = {};      // { exerciseId: { name, sets: [] } }
 
 // ====== INITIAL SETUP ======
 
@@ -119,8 +205,18 @@ function onLoadPlan() {
   exercisesSection.hidden = false;
   sessionFooter.hidden = false;
 
-  renderExerciseList(selectedDay);
+  // Initialize per-exercise storage for this session
+  sessionExercises = {};
+  currentDay.exercises.forEach(ex => {
+    sessionExercises[ex.id] = {
+      name: ex.name,
+      sets: []
+    };
+  });
+
+  renderExerciseList(currentDay);
   resetLogger();
+  sessionNotes.value = "";
   saveStatus.textContent = "";
 }
 
@@ -145,13 +241,40 @@ function renderExerciseList(day) {
     main.appendChild(name);
     main.appendChild(target);
 
+    const right = document.createElement("div");
+    right.className = "exercise-right";
+
     const tag = document.createElement("div");
     tag.className = "exercise-tag";
-    tag.textContent = currentDay.tag || "Exercise";
+    tag.textContent = day.tag || "Exercise";
+    right.appendChild(tag);
+
+    // Sets badge
+    const exData = sessionExercises[ex.id];
+    const setCount = exData && exData.sets ? exData.sets.length : 0;
+    const setsBadge = document.createElement("div");
+    setsBadge.className = "exercise-sets-badge";
+    setsBadge.textContent = `${setCount} set${setCount === 1 ? "" : "s"}`;
+    right.appendChild(setsBadge);
+
+    // Video icon, if present
+    if (ex.video) {
+      const videoBtn = document.createElement("button");
+      videoBtn.className = "icon-button";
+      videoBtn.type = "button";
+      videoBtn.title = "Tutorial video";
+      videoBtn.textContent = "▶";
+      videoBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        window.open(ex.video, "_blank");
+      });
+      right.appendChild(videoBtn);
+    }
 
     item.appendChild(main);
-    item.appendChild(tag);
+    item.appendChild(right);
 
+    // Clicking the whole row (except video button) selects exercise
     item.addEventListener("click", () => selectExercise(ex));
 
     exerciseListEl.appendChild(item);
@@ -160,7 +283,13 @@ function renderExerciseList(day) {
 
 function selectExercise(ex) {
   currentExercise = ex;
-  currentSets = [];
+
+  // Ensure the exercise entry exists
+  if (!sessionExercises[ex.id]) {
+    sessionExercises[ex.id] = { name: ex.name, sets: [] };
+  }
+
+  currentSets = sessionExercises[ex.id].sets;
   loggerSection.hidden = false;
 
   loggerExerciseName.textContent = ex.name;
@@ -176,7 +305,10 @@ function selectExercise(ex) {
 // ====== SET LOGGING ======
 
 function onAddSet() {
-  if (!currentExercise) return;
+  if (!currentExercise) {
+    alert("Select an exercise first.");
+    return;
+  }
 
   const weight = parseFloat(setWeightInput.value || "0");
   const reps = parseInt(setRepsInput.value || "0", 10);
@@ -187,24 +319,28 @@ function onAddSet() {
     return;
   }
 
-  currentSets.push({
+  const newSet = {
     weight: isNaN(weight) ? null : weight,
     reps,
     rpe: isNaN(rpe) ? null : rpe
-  });
+  };
+
+  currentSets.push(newSet);
+  sessionExercises[currentExercise.id].sets = currentSets;
 
   setWeightInput.value = "";
   setRepsInput.value = "";
   setRpeInput.value = "";
 
   renderSets();
+  renderExerciseList(currentDay); // update set counts on list
   saveStatus.textContent = "";
 }
 
 function renderSets() {
   setsListEl.innerHTML = "";
 
-  if (!currentSets.length) {
+  if (!currentSets || !currentSets.length) {
     const li = document.createElement("li");
     li.textContent = "No sets logged yet.";
     li.className = "set-meta";
@@ -241,24 +377,26 @@ function onSaveSession() {
 
   const date = dateInput.value || new Date().toISOString().split("T")[0];
 
-  // Structure: one session per date+day, holding sets grouped by exercise
   const sessions = loadSessions();
-
   const sessionId = `${date}_${currentDay.id}`;
-  const setsByExercise = {};
 
-  // For now, we only store the last exercise you logged sets for.
-  // Future improvement: allow switching between exercises and keeping sets per exercise in memory.
-  if (currentExercise && currentSets.length) {
-    setsByExercise[currentExercise.id] = {
-      name: currentExercise.name,
-      sets: currentSets.slice()
-    };
+  // Build compact exercises object (only those that have sets)
+  const setsByExercise = {};
+  Object.entries(sessionExercises).forEach(([id, data]) => {
+    if (data.sets && data.sets.length > 0) {
+      setsByExercise[id] = {
+        name: data.name,
+        sets: data.sets
+      };
+    }
+  });
+
+  if (Object.keys(setsByExercise).length === 0) {
+    alert("You haven't logged any sets yet.");
+    return;
   }
 
-  const existingIndex = sessions.findIndex(s => s.id === sessionId);
   const notes = sessionNotes.value.trim();
-
   const sessionData = {
     id: sessionId,
     date,
@@ -269,6 +407,7 @@ function onSaveSession() {
     savedAt: new Date().toISOString()
   };
 
+  const existingIndex = sessions.findIndex(s => s.id === sessionId);
   if (existingIndex >= 0) {
     sessions[existingIndex] = sessionData;
   } else {
@@ -327,12 +466,13 @@ function renderHistory() {
     const meta = document.createElement("div");
     meta.className = "history-item-meta";
 
+    const exerciseCount = Object.keys(sess.exercises || {}).length;
     const notesShort =
       sess.notes && sess.notes.length > 0
         ? `Notes: ${sess.notes.slice(0, 60)}${sess.notes.length > 60 ? "..." : ""}`
         : "No notes.";
 
-    meta.textContent = notesShort;
+    meta.textContent = `Exercises logged: ${exerciseCount} · ${notesShort}`;
 
     li.appendChild(title);
     li.appendChild(meta);
