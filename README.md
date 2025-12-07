@@ -208,10 +208,6 @@ Right now your app is:
   * considers **easy vs normal days**
   * suggests **starting loads** based on your past training.
 
-If you ever want to:
+---
 
-* add export/import,
-* per-exercise history & charts, or
-* smarter load progressions,
-
-we can treat that as **V8+ roadmap**.
+### V8 changes due when i find problems/improvements or when i have time
