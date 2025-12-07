@@ -1,6 +1,12 @@
-# gym-tracker
+# gym-tracker the journey
 
-Here’s the evolution of your app from **V1 → V7** in human language 😄
+Hey Guys, I'm Dr. Bob!
+
+Here is my tool that i'm using to track my gym performance. Feel free to use it. Built it the good help of ChatGPT. Here you have a list of changes that i've made.
+
+Cheers!
+Dr. Bob
+
 
 ---
 
