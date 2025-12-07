@@ -1,0 +1,21 @@
+{
+  "name": "Gym Tracker",
+  "short_name": "GymTracker",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#050608",
+  "theme_color": "#111111",
+  "description": "Offline-capable workout tracker for strength & fat loss.",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
