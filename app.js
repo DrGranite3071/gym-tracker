@@ -146,10 +146,21 @@ const WORKOUT_PLAN = [
 const STORAGE_KEY = "gymTrackerSessions_v1";
 const THEME_KEY = "gymTrackerTheme";
 
+// Mesocycle intensity multipliers
+const MESO_FACTORS = {
+  "1": 0.95, // foundation
+  "2": 1.0,  // build
+  "3": 1.05, // peak
+  "4": 0.9   // deload
+};
+const EASY_DAY_FACTOR = 0.85;
+
 // ====== DOM ELEMENTS ======
 
 const dateInput = document.getElementById("session-date");
 const daySelect = document.getElementById("day-select");
+const mesoWeekSelect = document.getElementById("meso-week");
+const dayModeSelect = document.getElementById("day-mode");
 const loadPlanBtn = document.getElementById("load-plan-btn");
 
 const exercisesSection = document.getElementById("exercises-section");
@@ -158,6 +169,7 @@ const exerciseListEl = document.getElementById("exercise-list");
 const loggerSection = document.getElementById("logger-section");
 const loggerExerciseName = document.getElementById("logger-exercise-name");
 const loggerTarget = document.getElementById("logger-target");
+const loggerSuggestion = document.getElementById("logger-suggestion");
 const setWeightInput = document.getElementById("set-weight");
 const setRepsInput = document.getElementById("set-reps");
 const setRpeInput = document.getElementById("set-rpe");
@@ -190,6 +202,8 @@ let currentDay = null;
 let currentExercise = null;
 let currentSets = [];
 let sessionExercises = {}; // { exerciseId: { name, sets: [] } }
+let currentMesoWeek = "2";
+let currentDayMode = "normal";
 
 // ====== INITIAL SETUP ======
 
@@ -203,6 +217,24 @@ function init() {
     opt.textContent = day.name;
     daySelect.appendChild(opt);
   });
+
+  if (mesoWeekSelect) {
+    currentMesoWeek = mesoWeekSelect.value;
+    mesoWeekSelect.addEventListener("change", () => {
+      currentMesoWeek = mesoWeekSelect.value;
+      updateSummaryCard();
+      if (currentExercise) updateExerciseSuggestion(currentExercise);
+    });
+  }
+
+  if (dayModeSelect) {
+    currentDayMode = dayModeSelect.value;
+    dayModeSelect.addEventListener("change", () => {
+      currentDayMode = dayModeSelect.value;
+      updateSummaryCard();
+      if (currentExercise) updateExerciseSuggestion(currentExercise);
+    });
+  }
 
   loadPlanBtn.addEventListener("click", onLoadPlan);
   addSetBtn.addEventListener("click", onAddSet);
@@ -272,7 +304,7 @@ function setupNav() {
   });
 }
 
-// ====== HELPERS FOR PLAN ======
+// ====== HELPERS ======
 
 function findExerciseDefinition(exId) {
   for (const day of WORKOUT_PLAN) {
@@ -283,11 +315,44 @@ function findExerciseDefinition(exId) {
   return null;
 }
 
+function roundToStep(value, step) {
+  if (!value || !step) return value;
+  return Math.round(value / step) * step;
+}
+
+function findLastExerciseSet(exId) {
+  const sessions = loadSessions().sort((a, b) =>
+    a.date < b.date ? 1 : -1
+  );
+  for (const sess of sessions) {
+    if (!sess.exercises) continue;
+    const exData = sess.exercises[exId];
+    if (exData && exData.sets && exData.sets.length) {
+      const lastSet = exData.sets[exData.sets.length - 1];
+      return {
+        date: sess.date,
+        weight: lastSet.weight,
+        reps: lastSet.reps,
+        rpe: lastSet.rpe
+      };
+    }
+  }
+  return null;
+}
+
+function computeSuggestedWeight(lastWeight, mesoWeek, dayMode) {
+  if (!lastWeight || lastWeight <= 0) return null;
+  const weekFactor = MESO_FACTORS[mesoWeek] || 1.0;
+  const dayFactor = dayMode === "easy" ? EASY_DAY_FACTOR : 1.0;
+  const raw = lastWeight * weekFactor * dayFactor;
+  return roundToStep(raw, 2.5);
+}
+
 // ====== SESSION STATS (AUTO-VOLUME) ======
 
 function computeSessionStats() {
   let totalStrengthSets = 0;
-  let totalVolume = 0;          // kg * reps
+  let totalVolume = 0;
   let totalCardioMinutes = 0;
   let strengthExercisesUsed = 0;
   let cardioExercisesUsed = 0;
@@ -297,12 +362,12 @@ function computeSessionStats() {
     const kind = def && def.kind ? def.kind : "strength";
     const sets = data.sets || [];
 
-    if (sets.length === 0) return;
+    if (!sets.length) return;
 
     if (kind === "treadmill") {
       cardioExercisesUsed += 1;
       sets.forEach(s => {
-        const minutes = typeof s.weight === "number" ? s.weight : 0; // weight field stores time
+        const minutes = typeof s.weight === "number" ? s.weight : 0;
         totalCardioMinutes += minutes;
       });
     } else {
@@ -321,7 +386,9 @@ function computeSessionStats() {
     totalVolume,
     totalCardioMinutes,
     strengthExercisesUsed,
-    cardioExercisesUsed
+    cardioExercisesUsed,
+    mesoWeek: currentMesoWeek,
+    dayMode: currentDayMode
   };
 }
 
@@ -334,7 +401,9 @@ function updateSummaryCard() {
     totalVolume,
     totalCardioMinutes,
     strengthExercisesUsed,
-    cardioExercisesUsed
+    cardioExercisesUsed,
+    mesoWeek,
+    dayMode
   } = stats;
 
   const hasAny =
@@ -366,9 +435,62 @@ function updateSummaryCard() {
     `Cardio: ${Math.round(totalCardioMinutes * 10) / 10} min` +
     (cardioExercisesUsed ? ` across ${cardioExercisesUsed} exercise(s).` : ".");
 
+  const li4 = document.createElement("li");
+  const modeLabel = dayMode === "easy" ? "Easy / reduced load" : "Normal";
+  li4.textContent = `Mesocycle: week ${mesoWeek} · Day type: ${modeLabel}.`;
+
   summaryListEl.appendChild(li1);
   summaryListEl.appendChild(li2);
   summaryListEl.appendChild(li3);
+  summaryListEl.appendChild(li4);
+}
+
+// ====== SUGGESTION TEXT ======
+
+function updateExerciseSuggestion(ex) {
+  if (!loggerSuggestion) return;
+
+  const kind = ex.kind || "strength";
+  const dayIsEasy = currentDayMode === "easy";
+
+  if (kind === "treadmill") {
+    if (dayIsEasy) {
+      loggerSuggestion.textContent =
+        "Easy day: aim for the low end of 10–15 minutes and reduce speed or incline by ~20%. You should be able to hold a conversation.";
+    } else {
+      loggerSuggestion.textContent =
+        "Normal day: 10–15 minutes at a brisk but sustainable pace. You can still talk in short sentences.";
+    }
+    return;
+  }
+
+  const last = findLastExerciseSet(ex.id);
+  const weekFactor = MESO_FACTORS[currentMesoWeek] || 1.0;
+
+  if (!last || last.weight == null || last.weight <= 0) {
+    loggerSuggestion.textContent = dayIsEasy
+      ? "Easy day: choose a weight that feels around RPE 6 and stop with 3–4 reps in reserve."
+      : "Normal day: choose a weight that feels around RPE 7–8 (about 2–3 reps left in the tank).";
+    return;
+  }
+
+  const suggested = computeSuggestedWeight(last.weight, currentMesoWeek, currentDayMode);
+  const targetRpe = dayIsEasy
+    ? "6–7"
+    : currentMesoWeek === "3"
+      ? "8"
+      : "7";
+
+  const lastDescr =
+    `${last.weight} kg × ${last.reps ?? "?"} reps` +
+    (last.rpe != null ? ` (RPE ${last.rpe})` : "");
+
+  loggerSuggestion.textContent =
+    (dayIsEasy ? "Easy day. " : "") +
+    `Last time: ${lastDescr}. ` +
+    (suggested
+      ? `Suggested starting weight today: ${suggested} kg, aiming for RPE ~${targetRpe}.`
+      : `Aim for similar load, but adjust so it feels like RPE ~${targetRpe}.`);
 }
 
 // ====== PLAN / EXERCISE RENDERING ======
@@ -484,6 +606,7 @@ function selectExercise(ex) {
   setRpeInput.value = "";
 
   renderSets();
+  updateExerciseSuggestion(ex);
 }
 
 // ====== SET LOGGING ======
@@ -680,10 +803,12 @@ function renderHistory() {
 
     if (sess.summary) {
       const s = sess.summary;
+      const modeLabel = s.dayMode === "easy" ? "Easy" : "Normal";
       summaryText =
         `Strength sets: ${s.totalStrengthSets}, ` +
         `Volume: ${Math.round(s.totalVolume)} kg·reps, ` +
-        `Cardio: ${Math.round(s.totalCardioMinutes * 10) / 10} min.`;
+        `Cardio: ${Math.round(s.totalCardioMinutes * 10) / 10} min, ` +
+        `Week ${s.mesoWeek || "?"} (${modeLabel}).`;
     } else {
       summaryText = "No summary stats (old session).";
     }
@@ -718,6 +843,7 @@ function resetLogger() {
   loggerSection.hidden = true;
   loggerExerciseName.textContent = "";
   loggerTarget.textContent = "";
+  if (loggerSuggestion) loggerSuggestion.textContent = "";
   setsListEl.innerHTML = "";
   currentExercise = null;
   currentSets = [];
